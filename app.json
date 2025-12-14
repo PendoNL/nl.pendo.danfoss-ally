@@ -7,6 +7,7 @@
   "platforms": [
     "local"
   ],
+  "brandColor": "#e00b1f",
   "name": {
     "en": "Danfoss Ally"
   },
@@ -31,6 +32,13 @@
       "method": "GET",
       "path": "/"
     }
+  },
+  "homeyCommunityTopicId": 146923,
+  "source": "https://github.com/PendoNL/nl.pendo.danfoss-ally",
+  "issues": "https://github.com/PendoNL/nl.pendo.danfoss-ally/issues",
+  "homepage": "https://pendo.nl",
+  "bugs": {
+    "url": "https://github.com/PendoNL/nl.pendo.danfoss-ally/issues"
   },
   "flow": {
     "triggers": [
