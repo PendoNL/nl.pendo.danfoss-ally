@@ -1,0 +1,25 @@
+{
+  "title": {
+    "en": "Set temperature"
+  },
+  "titleFormatted": {
+    "en": "Set temperature to [[temperature]]°C"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=thermostat|icon"
+    },
+    {
+      "type": "number",
+      "name": "temperature",
+      "min": 4.5,
+      "max": 35,
+      "step": 0.5,
+      "placeholder": {
+        "en": "Temperature"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "title": {
+    "en": "Temperature changed"
+  },
+  "titleFormatted": {
+    "en": "The temperature changed"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=thermostat|room-sensor|icon"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "temperature",
+      "type": "number",
+      "title": {
+        "en": "Temperature"
+      },
+      "example": 21.5
+    }
+  ]
+}

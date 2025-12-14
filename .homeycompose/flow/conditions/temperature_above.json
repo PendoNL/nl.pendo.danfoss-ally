@@ -1,0 +1,25 @@
+{
+  "title": {
+    "en": "Temperature is above"
+  },
+  "titleFormatted": {
+    "en": "Temperature is above [[temperature]]°C"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=thermostat|room-sensor|icon"
+    },
+    {
+      "type": "number",
+      "name": "temperature",
+      "min": 0,
+      "max": 50,
+      "step": 0.5,
+      "placeholder": {
+        "en": "Temperature"
+      }
+    }
+  ]
+}

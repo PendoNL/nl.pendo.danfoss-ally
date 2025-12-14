@@ -1,0 +1,27 @@
+{
+  "name": {
+    "en": "Danfoss Icon Controller"
+  },
+  "class": "other",
+  "capabilities": [],
+  "platforms": ["local"],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "/drivers/icon/assets/images/small.png",
+    "large": "/drivers/icon/assets/images/large.png",
+    "xlarge": "/drivers/icon/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
