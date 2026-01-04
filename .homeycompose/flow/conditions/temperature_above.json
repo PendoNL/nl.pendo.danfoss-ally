@@ -9,7 +9,7 @@
     {
       "type": "device",
       "name": "device",
-      "filter": "driver_id=thermostat|room-sensor|icon"
+      "filter": "driver_id=thermostat|room-sensor|icon-thermostat|icon-thermostat-basic|icon-room-sensor"
     },
     {
       "type": "number",

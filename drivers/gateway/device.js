@@ -2,13 +2,13 @@
 
 const Homey = require('homey');
 
-class IconDevice extends Homey.Device {
+class GatewayDevice extends Homey.Device {
 
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
-    this.log('Icon Controller device has been initialized');
+    this.log('Gateway device has been initialized');
 
     // Get device ID from data
     this._deviceId = this.getData().id;
@@ -56,14 +56,25 @@ class IconDevice extends Homey.Device {
 
     this.setAvailable().catch(this.error);
 
-    this.log(`Updated Icon Controller ${this._deviceId}: online=${deviceData.online}`);
+    // Update boiler relay alarm if available
+    if (this.hasCapability('alarm_heat') && 'boiler_relay' in deviceData) {
+      // boiler_relay true = heating is requested
+      this.setCapabilityValue('alarm_heat', deviceData.boiler_relay).catch(this.error);
+    }
+
+    // Update heat supply request if available
+    if (this.hasCapability('alarm_generic') && 'heat_supply_request' in deviceData) {
+      this.setCapabilityValue('alarm_generic', deviceData.heat_supply_request).catch(this.error);
+    }
+
+    this.log(`Updated Gateway ${this._deviceId}: online=${deviceData.online}, boiler_relay=${deviceData.boiler_relay}, heat_supply_request=${deviceData.heat_supply_request}`);
   }
 
   /**
    * Called when device is added
    */
   async onAdded() {
-    this.log('Icon Controller device has been added');
+    this.log('Gateway device has been added');
   }
 
   /**
@@ -84,9 +95,9 @@ class IconDevice extends Homey.Device {
    * Called when device is deleted
    */
   async onDeleted() {
-    this.log('Icon Controller device has been deleted');
+    this.log('Gateway device has been deleted');
   }
 
 }
 
-module.exports = IconDevice;
+module.exports = GatewayDevice;

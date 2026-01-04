@@ -2,13 +2,13 @@
 
 const Homey = require('homey');
 
-class IconDriver extends Homey.Driver {
+class IconControllerDriver extends Homey.Driver {
 
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log('Icon driver has been initialized');
+    this.log('Icon Controller driver has been initialized');
   }
 
   /**
@@ -33,11 +33,16 @@ class IconDriver extends Homey.Driver {
       const devices = [];
 
       for (const [deviceId, deviceData] of Object.entries(allDevices)) {
-        // Icon Controller: name contains "Icon" (e.g., "Danfoss Icon2 Controller")
-        // The Icon Controller is NOT a thermostat itself (isThermostat: false)
-        const nameContainsIcon = deviceData.name?.toLowerCase().includes('icon');
+        this.log(`Checking device ${deviceId}:`, deviceData.name, 'model:', deviceData.model, 'isThermostat:', deviceData.isThermostat);
 
-        if (nameContainsIcon) {
+        // Icon Controller / Zigbee Module: model is "Icon Zigbee Module" or similar
+        // It is NOT a thermostat (isThermostat: false)
+        const modelLower = deviceData.model?.toLowerCase() || '';
+        const isIconController = modelLower === 'icon zigbee module'
+          || modelLower.includes('icon') && modelLower.includes('module')
+          || modelLower.includes('icon') && modelLower.includes('controller');
+
+        if (isIconController && !deviceData.isThermostat) {
           devices.push({
             name: deviceData.name,
             data: {
@@ -50,7 +55,7 @@ class IconDriver extends Homey.Driver {
         }
       }
 
-      this.log(`Returning ${devices.length} Icon devices`);
+      this.log(`Returning ${devices.length} Icon Controller devices`);
       return devices;
     } catch (err) {
       this.error('Error in onPairListDevices:', err.message);
@@ -71,4 +76,4 @@ class IconDriver extends Homey.Driver {
 
 }
 
-module.exports = IconDriver;
+module.exports = IconControllerDriver;

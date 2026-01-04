@@ -2,13 +2,13 @@
 
 const Homey = require('homey');
 
-class ThermostatDriver extends Homey.Driver {
+class IconThermostatDriver extends Homey.Driver {
 
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log('Thermostat driver has been initialized');
+    this.log('Icon Thermostat driver has been initialized');
   }
 
   /**
@@ -28,13 +28,10 @@ class ThermostatDriver extends Homey.Driver {
       }
 
       this.log('Authorized, polling devices...');
-      // Ensure devices are fetched
       await app.pollDevices();
 
       this.log('Getting all devices...');
       const allDevices = app.getAllDevices();
-      this.log('allDevices type:', typeof allDevices);
-      this.log('allDevices value:', JSON.stringify(allDevices));
 
       if (!allDevices || typeof allDevices !== 'object') {
         this.log('allDevices is null or not an object, returning empty array');
@@ -44,10 +41,16 @@ class ThermostatDriver extends Homey.Driver {
       const devices = [];
 
       for (const [deviceId, deviceData] of Object.entries(allDevices)) {
-        this.log(`Checking device ${deviceId}:`, deviceData.name, 'isThermostat:', deviceData.isThermostat, 'model:', deviceData.model);
-        // Include only Ally radiator thermostats (exclude Icon thermostats)
+        this.log(`Checking device ${deviceId}:`, deviceData.name, 'isThermostat:', deviceData.isThermostat, 'model:', deviceData.model, 'has floor_temperature:', 'floor_temperature' in deviceData);
+
+        // Icon Thermostat with floor sensor (088U2122):
+        // - isThermostat: true
+        // - model contains "Icon"
+        // - has floor_temperature capability
         const modelContainsIcon = deviceData.model?.toLowerCase().includes('icon');
-        if (deviceData.isThermostat && !modelContainsIcon) {
+        const hasFloorTemperature = 'floor_temperature' in deviceData;
+
+        if (deviceData.isThermostat && modelContainsIcon && hasFloorTemperature) {
           devices.push({
             name: deviceData.name,
             data: {
@@ -60,7 +63,7 @@ class ThermostatDriver extends Homey.Driver {
         }
       }
 
-      this.log(`Returning ${devices.length} Ally radiator thermostat devices`);
+      this.log(`Returning ${devices.length} Icon Thermostat (with floor sensor) devices`);
       return devices;
     } catch (err) {
       this.error('Error in onPairListDevices:', err.message);
@@ -72,7 +75,6 @@ class ThermostatDriver extends Homey.Driver {
    * onPair is called when pairing is initiated
    */
   async onPair(session) {
-    // Handle list_devices - must be explicitly registered when using onPair
     session.setHandler('list_devices', async () => {
       this.log('list_devices handler called');
       return this.onPairListDevices();
@@ -81,4 +83,4 @@ class ThermostatDriver extends Homey.Driver {
 
 }
 
-module.exports = ThermostatDriver;
+module.exports = IconThermostatDriver;

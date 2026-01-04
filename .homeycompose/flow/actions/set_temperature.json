@@ -9,7 +9,7 @@
     {
       "type": "device",
       "name": "device",
-      "filter": "driver_id=thermostat|icon"
+      "filter": "driver_id=thermostat|icon-thermostat|icon-thermostat-basic"
     },
     {
       "type": "number",

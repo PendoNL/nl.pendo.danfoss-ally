@@ -1,0 +1,42 @@
+{
+  "name": {
+    "en": "Danfoss Ally Gateway"
+  },
+  "class": "other",
+  "capabilities": [
+    "alarm_heat"
+  ],
+  "capabilitiesOptions": {
+    "alarm_heat": {
+      "title": {
+        "en": "Boiler Relay"
+      },
+      "insightsTitleTrue": {
+        "en": "Heating requested"
+      },
+      "insightsTitleFalse": {
+        "en": "No heating requested"
+      }
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": ["cloud"],
+  "images": {
+    "small": "/drivers/gateway/assets/images/small.png",
+    "large": "/drivers/gateway/assets/images/large.png",
+    "xlarge": "/drivers/gateway/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

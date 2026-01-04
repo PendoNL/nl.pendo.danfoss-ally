@@ -1,6 +1,6 @@
 {
   "name": {
-    "en": "Danfoss Ally Radiator Thermostat"
+    "en": "Danfoss Icon Thermostat Basic"
   },
   "class": "thermostat",
   "capabilities": [
@@ -16,14 +16,14 @@
     }
   },
   "energy": {
-    "batteries": ["AA", "AA"]
+    "batteries": ["AAA", "AAA"]
   },
   "platforms": ["local"],
   "connectivity": ["cloud"],
   "images": {
-    "small": "/drivers/thermostat/assets/images/small.png",
-    "large": "/drivers/thermostat/assets/images/large.png",
-    "xlarge": "/drivers/thermostat/assets/images/xlarge.png"
+    "small": "/drivers/icon-thermostat-basic/assets/images/small.png",
+    "large": "/drivers/icon-thermostat-basic/assets/images/large.png",
+    "xlarge": "/drivers/icon-thermostat-basic/assets/images/xlarge.png"
   },
   "pair": [
     {
