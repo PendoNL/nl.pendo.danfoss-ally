@@ -1,1 +1,1 @@
-Control devices via the Danfoss Ally API
+Control your Danfoss Ally and Icon smart heating devices via the Danfoss Ally cloud API.

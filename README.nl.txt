@@ -1,0 +1,1 @@
+Bedien je Danfoss Ally en Icon slimme verwarmingsapparaten via de Danfoss Ally cloud API.
