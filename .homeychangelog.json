@@ -10,5 +10,8 @@
   },
   "1.1.0": {
     "en": "Added various devices types and icons"
+  },
+  "1.1.1": {
+    "en": "Corrected driver name"
   }
 }
