@@ -1,6 +1,6 @@
 {
   "name": {
-    "en": "Danfoss Icon Thermostat"
+    "en": "Danfoss Icon Thermostat + Floor IR"
   },
   "class": "thermostat",
   "capabilities": [
