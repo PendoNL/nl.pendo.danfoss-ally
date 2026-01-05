@@ -8,10 +8,12 @@
   ],
   "brandColor": "#e00b1f",
   "name": {
-    "en": "Danfoss Ally"
+    "en": "Danfoss Ally",
+    "nl": "Danfoss Ally"
   },
   "description": {
-    "en": "Control devices via the Danfoss Ally API"
+    "en": "Automate your Danfoss Ally thermostats",
+    "nl": "Automatiseer je Danfoss Ally thermostaten"
   },
   "category": [
     "climate"
