@@ -1,1 +1,3 @@
-Transform your Danfoss Ally smart heating system into a fully automated climate powerhouse with Homey. Create intelligent flows that respond to your lifestyle — lower the heat when you leave, warm up the house before you arrive, or let your thermostats react to weather changes, window sensors, and your daily routines. Combine your Danfoss radiator thermostats with the rest of your smart home and unlock comfort and energy savings you never thought possible.
+Transform your Danfoss Ally smart heating system into a fully automated climate powerhouse with Homey using the Danfoss Ally API.
+
+Create intelligent flows that respond to your lifestyle — lower the heat when you leave, warm up the house before you arrive, or let your thermostats react to weather changes, window sensors, and your daily routines. Combine your Danfoss radiator thermostats with the rest of your smart home and unlock comfort and energy savings you never thought possible.
