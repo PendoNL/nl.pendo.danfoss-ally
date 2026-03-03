@@ -9,7 +9,7 @@
     "measure_battery"
   ],
   "energy": {
-    "batteries": ["AA", "AA"]
+    "batteries": ["CR2450"]
   },
   "platforms": ["local"],
   "connectivity": ["cloud"],
