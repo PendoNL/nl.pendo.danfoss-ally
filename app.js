@@ -68,6 +68,13 @@ class DanfossAllyApp extends Homey.App {
       await args.device.triggerCapabilityListener('target_temperature', args.temperature);
     });
 
+    // Action: Set mode
+    const actionSetMode = this.homey.flow.getActionCard('set_mode');
+    actionSetMode.registerRunListener(async (args) => {
+      const deviceId = args.device.getData().id;
+      await this.setMode(deviceId, args.mode);
+    });
+
     this.log('Flow cards registered');
   }
 
