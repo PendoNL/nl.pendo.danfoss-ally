@@ -28,5 +28,8 @@
   },
   "1.2.0": {
     "en": "Added device mode capability to thermostats"
+  },
+  "1.2.1": {
+    "en": "Adds a [Set mode for all thermostats] flow card"
   }
 }
