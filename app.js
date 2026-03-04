@@ -75,6 +75,19 @@ class DanfossAllyApp extends Homey.App {
       await this.setMode(deviceId, args.mode);
     });
 
+    // Action: Set mode for all thermostats
+    const actionSetModeAll = this.homey.flow.getActionCard('set_mode_all');
+    actionSetModeAll.registerRunListener(async (args) => {
+      const devices = this.getAllDevices();
+      const results = [];
+      for (const [deviceId, deviceData] of Object.entries(devices)) {
+        if (deviceData.isThermostat) {
+          results.push(this.setMode(deviceId, args.mode));
+        }
+      }
+      await Promise.all(results);
+    });
+
     this.log('Flow cards registered');
   }
 

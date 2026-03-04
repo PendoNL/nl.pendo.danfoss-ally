@@ -163,6 +163,62 @@
       },
       {
         "title": {
+          "en": "Set mode for all thermostats"
+        },
+        "titleFormatted": {
+          "en": "Set all thermostats to [[mode]]"
+        },
+        "args": [
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode"
+            },
+            "values": [
+              {
+                "id": "at_home",
+                "label": {
+                  "en": "At home"
+                }
+              },
+              {
+                "id": "leaving_home",
+                "label": {
+                  "en": "Leaving home"
+                }
+              },
+              {
+                "id": "holiday",
+                "label": {
+                  "en": "Holiday (Away)"
+                }
+              },
+              {
+                "id": "holiday_sat",
+                "label": {
+                  "en": "Holiday (Home)"
+                }
+              },
+              {
+                "id": "pause",
+                "label": {
+                  "en": "Pause"
+                }
+              },
+              {
+                "id": "manual",
+                "label": {
+                  "en": "Manual"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_mode_all"
+      },
+      {
+        "title": {
           "en": "Set temperature"
         },
         "titleFormatted": {
