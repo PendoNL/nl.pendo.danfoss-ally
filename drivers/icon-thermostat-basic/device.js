@@ -63,7 +63,7 @@ class IconThermostatBasicDevice extends Homey.Device {
   /**
    * Update capabilities from device data
    */
-  _updateCapabilities(deviceData) {
+  async _updateCapabilities(deviceData) {
     // Check if device is online
     if (deviceData.online === false) {
       this.setUnavailable('Device is offline').catch(this.error);
@@ -93,6 +93,20 @@ class IconThermostatBasicDevice extends Homey.Device {
       // Icon devices may return temperature directly, not in tenths
       const temp = targetTemp > 100 ? targetTemp / 10 : targetTemp;
       this.setCapabilityValue('target_temperature', temp).catch(this.error);
+    }
+
+    // Update measure_humidity if available
+    if ('humidity' in deviceData) {
+      if (!this.hasCapability('measure_humidity')) {
+        await this.addCapability('measure_humidity').catch(this.error);
+      }
+      this.setCapabilityValue('measure_humidity', deviceData.humidity).catch(this.error);
+    } else if ('humidity_value' in deviceData) {
+      if (!this.hasCapability('measure_humidity')) {
+        await this.addCapability('measure_humidity').catch(this.error);
+      }
+      const humidity = deviceData.humidity_value / 10;
+      this.setCapabilityValue('measure_humidity', humidity).catch(this.error);
     }
 
     // Update battery if available

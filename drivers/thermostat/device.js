@@ -63,7 +63,7 @@ class ThermostatDevice extends Homey.Device {
   /**
    * Update capabilities from device data
    */
-  _updateCapabilities(deviceData) {
+  async _updateCapabilities(deviceData) {
     // Check if device is online
     if (deviceData.online === false) {
       this.setUnavailable('Device is offline').catch(this.error);
@@ -97,6 +97,20 @@ class ThermostatDevice extends Homey.Device {
     if (targetTempRaw !== null) {
       const targetTemp = targetTempRaw / 10;
       this.setCapabilityValue('target_temperature', targetTemp).catch(this.error);
+    }
+
+    // Update measure_humidity if available (humidity_value is in tenths of percent)
+    if ('humidity_value' in deviceData) {
+      if (!this.hasCapability('measure_humidity')) {
+        await this.addCapability('measure_humidity').catch(this.error);
+      }
+      const humidity = deviceData.humidity_value / 10;
+      this.setCapabilityValue('measure_humidity', humidity).catch(this.error);
+    } else if ('humidity' in deviceData) {
+      if (!this.hasCapability('measure_humidity')) {
+        await this.addCapability('measure_humidity').catch(this.error);
+      }
+      this.setCapabilityValue('measure_humidity', deviceData.humidity).catch(this.error);
     }
 
     // Update measure_battery
