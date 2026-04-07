@@ -3,8 +3,9 @@
 const Homey = require('homey');
 const DanfossAllyApi = require('./lib/DanfossAllyApi');
 
-const POLL_INTERVAL = 45000; // 45 seconds, same as HA integration
-const MIN_UPDATE_INTERVAL = 30000; // 30 seconds minimum between updates
+const DEFAULT_POLL_INTERVAL = 45; // seconds
+const MIN_POLL_INTERVAL = 10; // seconds
+const MAX_POLL_INTERVAL = 300; // seconds
 
 class DanfossAllyApp extends Homey.App {
 
@@ -43,6 +44,8 @@ class DanfossAllyApp extends Homey.App {
             this.error('Failed to initialize API after settings change:', err.message);
           }
         }
+      } else if (key === 'poll_interval') {
+        this._startPolling();
       }
     });
 
@@ -115,6 +118,16 @@ class DanfossAllyApp extends Homey.App {
   }
 
   /**
+   * Get the configured poll interval in milliseconds
+   * @returns {number}
+   */
+  _getPollInterval() {
+    const setting = this.homey.settings.get('poll_interval');
+    const seconds = Math.min(MAX_POLL_INTERVAL, Math.max(MIN_POLL_INTERVAL, setting || DEFAULT_POLL_INTERVAL));
+    return seconds * 1000;
+  }
+
+  /**
    * Start the polling interval
    */
   _startPolling() {
@@ -123,11 +136,13 @@ class DanfossAllyApp extends Homey.App {
       this.homey.clearInterval(this._pollInterval);
     }
 
+    const interval = this._getPollInterval();
+
     this._pollInterval = this.homey.setInterval(async () => {
       await this.pollDevices();
-    }, POLL_INTERVAL);
+    }, interval);
 
-    this.log(`Started polling every ${POLL_INTERVAL / 1000} seconds`);
+    this.log(`Started polling every ${interval / 1000} seconds`);
   }
 
   /**
@@ -161,7 +176,11 @@ class DanfossAllyApp extends Homey.App {
 
       this.log(`Polled ${Object.keys(devices).length} devices`);
     } catch (err) {
-      this.error('Failed to poll devices:', err.message);
+      if (err.code === 'RATE_LIMITED') {
+        this.error(`Rate limited by Danfoss API. Consider increasing the poll interval (currently ${this._getPollInterval() / 1000}s). Retry after ${err.retryAfter}s.`);
+      } else {
+        this.error('Failed to poll devices:', err.message);
+      }
     }
   }
 

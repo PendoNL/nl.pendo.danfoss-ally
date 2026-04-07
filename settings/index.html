@@ -52,6 +52,22 @@
       outline: none;
       border-color: #e74c3c;
     }
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 6px;
+      background: #ddd;
+      border: none;
+      border-radius: 3px;
+      padding: 0;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #e74c3c;
+      border-radius: 50%;
+      cursor: pointer;
+    }
     button {
       padding: 12px 24px;
       background: #e74c3c;
@@ -153,6 +169,17 @@
       Get your API credentials at <a href="https://developer.danfoss.com" target="_blank">developer.danfoss.com</a>
     </p>
 
+    <h2>Poll Interval</h2>
+
+    <div class="form-group">
+      <label for="pollInterval">Interval in seconds (<span id="pollIntervalValue">45</span>)</label>
+      <input type="range" id="pollInterval" min="10" max="300" step="5" value="45">
+    </div>
+
+    <p class="info">
+      How often the app fetches new data from the Danfoss API. Lower values give faster updates but use more API calls. Default: 45 seconds.
+    </p>
+
     <h2>Connected Devices</h2>
     <div id="deviceList" class="device-list">
       <p id="noDevices">No devices connected. Save your credentials and test the connection.</p>
@@ -165,6 +192,8 @@
 
       var apiKeyInput = document.getElementById('apiKey');
       var apiSecretInput = document.getElementById('apiSecret');
+      var pollIntervalInput = document.getElementById('pollInterval');
+      var pollIntervalValue = document.getElementById('pollIntervalValue');
       var saveBtn = document.getElementById('saveBtn');
       var testBtn = document.getElementById('testBtn');
       var statusEl = document.getElementById('status');
@@ -180,6 +209,29 @@
       Homey.get('api_secret', function(err, value) {
         if (err) return console.error(err);
         if (value) apiSecretInput.value = '••••••••••••••••';
+      });
+
+      Homey.get('poll_interval', function(err, value) {
+        if (err) return console.error(err);
+        if (value) {
+          pollIntervalInput.value = value;
+          pollIntervalValue.textContent = value;
+        }
+      });
+
+      pollIntervalInput.addEventListener('input', function() {
+        pollIntervalValue.textContent = pollIntervalInput.value;
+      });
+
+      pollIntervalInput.addEventListener('change', function() {
+        var value = parseInt(pollIntervalInput.value, 10);
+        Homey.set('poll_interval', value, function(err) {
+          if (err) {
+            showStatus('Failed to save poll interval: ' + err, 'error');
+          } else {
+            showStatus('Poll interval set to ' + value + ' seconds.', 'success');
+          }
+        });
       });
 
       // Save settings
