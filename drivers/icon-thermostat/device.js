@@ -90,6 +90,8 @@ class IconThermostatDevice extends Homey.Device {
     // Update floor temperature if available
     if ('floor_temperature' in deviceData && this.hasCapability('measure_temperature.floor')) {
       this.setCapabilityValue('measure_temperature.floor', deviceData.floor_temperature).catch(this.error);
+    }else if(deviceData.floor_sensor === true && 'MeasuredValue' in deviceData && this.hasCapability('measure_temperature.floor')) {
+      this.setCapabilityValue('measure_temperature.floor', deviceData.MeasuredValue / 10).catch(this.error);
     }
 
     // Update target_temperature

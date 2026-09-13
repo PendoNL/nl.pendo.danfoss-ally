@@ -41,14 +41,14 @@ class IconThermostatDriver extends Homey.Driver {
       const devices = [];
 
       for (const [deviceId, deviceData] of Object.entries(allDevices)) {
-        this.log(`Checking device ${deviceId}:`, deviceData.name, 'isThermostat:', deviceData.isThermostat, 'model:', deviceData.model, 'has floor_temperature:', 'floor_temperature' in deviceData);
+        this.log(`Checking device ${deviceId}:`, deviceData.name, 'isThermostat:', deviceData.isThermostat, 'model:', deviceData.model, 'has floor_temperature:', ('floor_temperature' in deviceData) || deviceData.floor_sensor === true);
 
         // Icon Thermostat with floor sensor (088U2122):
         // - isThermostat: true
         // - model contains "Icon"
         // - has floor_temperature capability
         const modelContainsIcon = deviceData.model?.toLowerCase().includes('icon');
-        const hasFloorTemperature = 'floor_temperature' in deviceData;
+        const hasFloorTemperature = ('floor_temperature' in deviceData) || deviceData.floor_sensor === true;
 
         if (deviceData.isThermostat && modelContainsIcon && hasFloorTemperature) {
           devices.push({
