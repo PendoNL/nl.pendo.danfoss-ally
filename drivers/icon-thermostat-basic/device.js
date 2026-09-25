@@ -91,7 +91,7 @@ class IconThermostatBasicDevice extends Homey.Device {
     const targetTemp = this._getSetpointForCurrentMode(deviceData);
     if (targetTemp !== null) {
       // Icon devices may return temperature directly, not in tenths
-      const temp = targetTemp > 100 ? targetTemp / 10 : targetTemp;
+      const temp = targetTemp > 35 ? targetTemp / 10 : targetTemp;
       this.setCapabilityValue('target_temperature', temp).catch(this.error);
     }
 
