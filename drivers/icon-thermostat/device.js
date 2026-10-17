@@ -132,11 +132,19 @@ class IconThermostatDevice extends Homey.Device {
       return deviceData.temp_set;
     }
 
-    if ('mode' in deviceData) {
-      const setpointCode = this._getSetpointCode(deviceData.mode);
-      if (setpointCode && setpointCode in deviceData) {
-        return deviceData[setpointCode];
-      }
+    const setpointCode = 'mode' in deviceData
+      ? this._getSetpointCode(deviceData.mode)
+      : 'manual_mode_fast';
+
+    // On Icon devices manual_mode_fast is not the setpoint: the gateway rewrites
+    // it to upper_temp (35) while the room is actively calling for heat. temp_set
+    // holds the real setpoint, so read that instead.
+    if (setpointCode === 'manual_mode_fast' && 'temp_set' in deviceData) {
+      return deviceData.temp_set;
+    }
+
+    if (setpointCode in deviceData) {
+      return deviceData[setpointCode];
     }
 
     // Fallback to manual_mode_fast
