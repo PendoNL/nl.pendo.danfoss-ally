@@ -43,5 +43,8 @@
   },
   "1.3.3": {
     "en": "Fixed a bug tht displayed a wrong temprature when in manual mode"
+  },
+  "1.3.4": {
+    "en": "Improved temp reading in holiday mode"
   }
 }
