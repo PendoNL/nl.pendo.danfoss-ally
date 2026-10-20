@@ -90,8 +90,8 @@ class IconThermostatBasicDevice extends Homey.Device {
     // Update target_temperature
     const targetTemp = this._getSetpointForCurrentMode(deviceData);
     if (targetTemp !== null) {
-      // Icon devices may return temperature directly, not in tenths
-      const temp = targetTemp > 100 ? targetTemp / 10 : targetTemp;
+      // All Ally API setpoint codes are reported in tenths of a degree
+      const temp = targetTemp / 10;
       this.setCapabilityValue('target_temperature', temp).catch(this.error);
     }
 
