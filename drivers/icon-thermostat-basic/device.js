@@ -116,33 +116,33 @@ class IconThermostatBasicDevice extends Homey.Device {
       this.setCapabilityValue('measure_battery', deviceData.battery_percentage).catch(this.error);
     }
 
-    this.log(`Updated Icon Thermostat Basic ${this._deviceId}: temp=${deviceData.temperature}, target=${targetTemp}`);
+    this.log(`Updated Icon Thermostat Basic ${this._deviceId}: temp=${deviceData.temperature}, target=${targetTemp} [mode=${deviceData.mode}, temp_set=${deviceData.temp_set}, manual_mode_fast=${deviceData.manual_mode_fast}, at_home_setting=${deviceData.at_home_setting}, holiday_setting=${deviceData.holiday_setting}]`);
   }
 
   /**
-   * Get the setpoint value for the current mode
+   * Get the active setpoint.
+   *
+   * On Icon systems `mode` is the Ally gateway's house mode, not the Icon
+   * room's own control mode: a room left in permanent manual mode on the Icon
+   * controller is still reported as at_home. The per-mode setpoint codes are
+   * therefore the presets configured in the Ally app, and manual_mode_fast is
+   * rewritten to upper_temp (35) while the room calls for heat. Only temp_set
+   * carries the room's active setpoint, so prefer it whenever it is reported.
    */
   _getSetpointForCurrentMode(deviceData) {
-    if (this._fallbackToTempSet && 'temp_set' in deviceData) {
+    if ('temp_set' in deviceData) {
       return deviceData.temp_set;
     }
 
+    // Icon rooms that do not report temp_set: fall back to the mode preset.
     const setpointCode = 'mode' in deviceData
       ? this._getSetpointCode(deviceData.mode)
       : 'manual_mode_fast';
-
-    // On Icon devices manual_mode_fast is not the setpoint: the gateway rewrites
-    // it to upper_temp (35) while the room is actively calling for heat. temp_set
-    // holds the real setpoint, so read that instead.
-    if (setpointCode === 'manual_mode_fast' && 'temp_set' in deviceData) {
-      return deviceData.temp_set;
-    }
 
     if (setpointCode in deviceData) {
       return deviceData[setpointCode];
     }
 
-    // Fallback to manual_mode_fast
     if ('manual_mode_fast' in deviceData) {
       return deviceData.manual_mode_fast;
     }
