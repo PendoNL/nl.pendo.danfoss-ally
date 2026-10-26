@@ -121,38 +121,58 @@ class IconThermostatDevice extends Homey.Device {
       this.setCapabilityValue('measure_battery', deviceData.battery_percentage).catch(this.error);
     }
 
-    this.log(`Updated Icon Thermostat ${this._deviceId}: temp=${deviceData.temperature}, floor_temp=${deviceData.floor_temperature}, target=${targetTemp} [mode=${deviceData.mode}, temp_set=${deviceData.temp_set}, manual_mode_fast=${deviceData.manual_mode_fast}, at_home_setting=${deviceData.at_home_setting}, holiday_setting=${deviceData.holiday_setting}]`);
+    this.log(`Updated Icon Thermostat ${this._deviceId}: temp=${deviceData.temperature}, floor_temp=${deviceData.floor_temperature}, target=${targetTemp} [mode=${deviceData.mode}, temp_set=${deviceData.temp_set}, manual_mode_fast=${deviceData.manual_mode_fast}, at_home_setting=${deviceData.at_home_setting}, holiday_setting=${deviceData.holiday_setting}, work_state=${deviceData.work_state}, SetpointChangeSource=${deviceData.SetpointChangeSource ?? deviceData.setpointchangesource}]`);
   }
 
   /**
    * Get the active setpoint.
    *
-   * On Icon systems `mode` is the Ally gateway's house mode, not the Icon
-   * room's own control mode: a room left in permanent manual mode on the Icon
-   * controller is still reported as at_home. The per-mode setpoint codes are
-   * therefore the presets configured in the Ally app, and manual_mode_fast is
-   * rewritten to upper_temp (35) while the room calls for heat. Only temp_set
-   * carries the room's active setpoint, so prefer it whenever it is reported.
+   * The room runs the setpoint belonging to the mode it is in, so vacation
+   * reads holiday_setting and pause reads pause_setting. temp_set is not
+   * mode-aware on Icon: it tracks the at-home value and stays put when the
+   * mode changes, so it must not be used as the setpoint for every mode.
    */
   _getSetpointForCurrentMode(deviceData) {
-    if ('temp_set' in deviceData) {
+    if (this._fallbackToTempSet && 'temp_set' in deviceData) {
       return deviceData.temp_set;
     }
 
-    // Icon rooms that do not report temp_set: fall back to the mode preset.
-    const setpointCode = 'mode' in deviceData
-      ? this._getSetpointCode(deviceData.mode)
-      : 'manual_mode_fast';
+    const setpointCode = this._resolveSetpointCode(deviceData);
+
+    // manual_mode_fast is not readable as a setpoint: the gateway rewrites it
+    // to upper_temp (35) while the room is calling for heat. temp_set holds
+    // the manual setpoint, so read that instead when it is reported.
+    if (setpointCode === 'manual_mode_fast' && 'temp_set' in deviceData) {
+      return deviceData.temp_set;
+    }
 
     if (setpointCode in deviceData) {
       return deviceData[setpointCode];
     }
 
+    // Fallback to manual_mode_fast
     if ('manual_mode_fast' in deviceData) {
       return deviceData.manual_mode_fast;
     }
 
     return null;
+  }
+
+  /**
+   * Resolve which setpoint code currently holds the active setpoint.
+   */
+  _resolveSetpointCode(deviceData) {
+    // A setpoint changed at the thermostat itself wins over the mode preset:
+    // the room runs that value even though the gateway still reports the house
+    // mode. Both spellings of the key occur in the wild.
+    const changeSource = deviceData.SetpointChangeSource ?? deviceData.setpointchangesource;
+    if (changeSource === 'Manual') {
+      return 'manual_mode_fast';
+    }
+
+    return 'mode' in deviceData
+      ? this._getSetpointCode(deviceData.mode)
+      : 'manual_mode_fast';
   }
 
   /**
