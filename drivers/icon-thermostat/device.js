@@ -133,10 +133,6 @@ class IconThermostatDevice extends Homey.Device {
    * mode changes, so it must not be used as the setpoint for every mode.
    */
   _getSetpointForCurrentMode(deviceData) {
-    if (this._fallbackToTempSet && 'temp_set' in deviceData) {
-      return deviceData.temp_set;
-    }
-
     const setpointCode = this._resolveSetpointCode(deviceData);
 
     // manual_mode_fast is not readable as a setpoint: the gateway rewrites it
@@ -150,7 +146,14 @@ class IconThermostatDevice extends Homey.Device {
       return deviceData[setpointCode];
     }
 
-    // Fallback to manual_mode_fast
+    // The code for this mode is not reported at all, so fall back to the
+    // single setpoint. This has to stay demand-driven: a room can omit
+    // manual_mode_fast while still reporting every mode preset, and those
+    // presets remain authoritative.
+    if ('temp_set' in deviceData) {
+      return deviceData.temp_set;
+    }
+
     if ('manual_mode_fast' in deviceData) {
       return deviceData.manual_mode_fast;
     }
